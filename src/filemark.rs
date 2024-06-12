@@ -31,7 +31,6 @@ pub fn make_copy(target_filepath: &PathBuf, folder: &PathBuf) {
     dest_name.push_str(target_filename);
     let mut dest_path = folder.clone();
     dest_path.push(dest_name);
-    println!("{:?}", dest_path);
     fs::copy(target_filepath, dest_path).unwrap();
 }
 
