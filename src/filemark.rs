@@ -4,7 +4,7 @@ use std::{
     path::PathBuf,
 };
 
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Local};
 use sha2::{Digest, Sha256};
 
 pub fn prepare(target_file: &PathBuf, folder: &PathBuf) {
@@ -16,20 +16,22 @@ pub fn prepare(target_file: &PathBuf, folder: &PathBuf) {
     }
 }
 
-fn get_now() -> chrono::DateTime<Utc> {
-    Utc::now()
+fn get_now() -> chrono::DateTime<Local> {
+    Local::now()
 }
 
 const SEP: char = '_';
 
 pub fn make_copy(target_filepath: &PathBuf, folder: &PathBuf) {
     let target_filename = target_filepath.file_name().unwrap().to_str().unwrap();
-    let suffix = get_now().to_rfc3339();
+    let suffix = get_now().to_rfc3339_opts(chrono::SecondsFormat::Secs, false);
+    let suffix = suffix.replace(":", ".");
     let mut dest_name = String::from(&suffix);
     dest_name.push(SEP);
     dest_name.push_str(target_filename);
     let mut dest_path = folder.clone();
     dest_path.push(dest_name);
+    println!("{:?}", dest_path);
     fs::copy(target_filepath, dest_path).unwrap();
 }
 
@@ -69,8 +71,8 @@ pub fn is_updated(target_filepath: &PathBuf, folder: &PathBuf) -> bool {
         if token.len() < 2 {
             continue;
         }
-        let timestamp = token[0];
-        let date = match timestamp.parse::<DateTime<Utc>>() {
+        let timestamp = token[0].replace(".", ":");
+        let date = match timestamp.parse::<DateTime<Local>>() {
             Ok(v) => v,
             Err(_) => continue,
         };
