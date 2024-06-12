@@ -1,6 +1,6 @@
 Monitors a file for changes and creates copies every durations.
 
-Usage: filemark [filepath] [temporary_folder] [duration]
+Usage: filemark.exe [OPTIONS] [filepath] [temporary_folder] [duration]
 
 Arguments:
   [filepath]          Filepath to mark.
@@ -8,4 +8,5 @@ Arguments:
   [duration]          Mark duration.
 
 Options:
+  -l, --log   Show copied result to stdout.
   -h, --help  Print help

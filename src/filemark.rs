@@ -22,16 +22,22 @@ fn get_now() -> chrono::DateTime<Local> {
 
 const SEP: char = '_';
 
-pub fn make_copy(target_filepath: &PathBuf, folder: &PathBuf) {
+pub fn make_copy(target_filepath: &PathBuf, folder: &PathBuf, show_result: bool) {
     let target_filename = target_filepath.file_name().unwrap().to_str().unwrap();
-    let suffix = get_now().to_rfc3339_opts(chrono::SecondsFormat::Secs, false);
-    let suffix = suffix.replace(":", ".");
+    let time = get_now().to_rfc3339_opts(chrono::SecondsFormat::Secs, false);
+    let suffix = time.replace(":", ".");
     let mut dest_name = String::from(&suffix);
     dest_name.push(SEP);
     dest_name.push_str(target_filename);
     let mut dest_path = folder.clone();
-    dest_path.push(dest_name);
+    dest_path.push(&dest_name);
     fs::copy(target_filepath, dest_path).unwrap();
+    if show_result {
+        let t = time.split("T").collect::<Vec<&str>>()[1]
+            .split("+")
+            .collect::<Vec<&str>>()[0];
+        println!("[{}] {}", t, dest_name);
+    }
 }
 
 // find most recent updated and calc hash

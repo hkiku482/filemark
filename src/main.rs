@@ -11,7 +11,11 @@ fn main() {
         prepare(&opt.get_filepath(), &opt.get_temporary_folder());
         let m = is_updated(&opt.get_filepath(), &opt.get_temporary_folder());
         if !m {
-            make_copy(&opt.get_filepath(), &opt.get_temporary_folder());
+            make_copy(
+                &opt.get_filepath(),
+                &opt.get_temporary_folder(),
+                opt.get_show_result(),
+            );
         }
         if d.is_zero() {
             break;
